@@ -1,37 +1,17 @@
-import styled from '@emotion/styled';
+// import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 export const List = styled.ul`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  grid-template-columns: repeat(1, minmax(280px, 1fr));
   grid-template-rows: auto;
-  gap: 20px;
-  margin-bottom: 20px;
-  ${'' /* margin: 0; */}
-  padding: 20px;
+  gap: ${p => p.theme.space[4]}px;
+  margin: ${p => p.theme.space[0]}px;
+  padding: ${p => p.theme.space[4]}px;
 `;
 
-export const Item = styled.li`
+export const ListItem = styled.li`
   display: flex;
-  gap: 10px;
+  gap: ${p => p.theme.space[3]}px;
   justify-content: space-between;
-`;
-
-export const Button = styled.button`
-  width: 200px;
-  border-radius: 5px;
-  border: none;
-  background-color: #fff;
-  transition: all 250ms linear;
-  :hover,
-  :focus {
-    background-color: #fa5c71;
-    transform: scale(0.9);
-  }
-`;
-
-export const Contact = styled.p`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
 `;

@@ -1,83 +1,106 @@
-import { nanoid } from 'nanoid';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getItems } from '../../redux/selectors';
-import { Form, Label, Input, Button } from './ContactForm.styled';
-import { addContact } from 'redux/operations';
+import { Formik, ErrorMessage } from 'formik';
+import { Notify } from 'notiflix';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import Loader from 'components/Loader';
+import { Form, Input, Label } from './ContactForm.styled';
+import { AddButton } from 'components/Button/Button.styled';
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from 'redux/contactsSlice';
+import { NAME_MATCH, SignupSchema } from 'constants/constants';
+import AddContactIcon from 'components/Icons/AddContactIcon';
 
-const nameInputId = nanoid(5);
-const numberInputId = nanoid(8);
+export const FormError = ({ name }) => {
+  return (
+    <ErrorMessage name={name} render={message => Notify.failure(message)} />
+  );
+};
 
 const ContactForm = () => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [addContact, { isLoading: isPosting }] = useAddContactMutation();
+  const { data: contacts } = useGetContactsQuery();
 
-  const items = useSelector(getItems);
-  const dispatch = useDispatch();
+  const handleSubmit = async e => {
+    try {
+      e.preventDefault();
+      const name = e.target.name.value;
+      const number = e.target.number.value;
+      const contactsName = contacts.find(contact => contact.name === name);
+      const contactsNumber = contacts.find(
+        contact => contact.number === number
+      );
+      const contact = { name, number };
 
-  const handleInputChange = e => {
-    const { name, value } = e.currentTarget;
-
-    switch (name) {
-      case 'name':
-        return setName(value);
-      case 'number':
-        return setNumber(value);
-      default:
+      if (contactsName) {
+        Swal.fire({
+          title: 'Error!',
+          text: `Sorry, ${name} is already in your contacts`,
+          icon: 'error',
+          confirmButtonText: 'Got it',
+        });
         return;
+      }
+      if (contactsNumber) {
+        Swal.fire({
+          title: 'Error!',
+          text: `Sorry, ${number} is already in your contacts`,
+          icon: 'error',
+          confirmButtonText: 'Got it',
+        });
+        return;
+      }
+      await addContact(contact);
+      toast.success('Contact added successfully!');
+      e.target.reset();
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong. Please, try again.');
     }
-  };
-  const filteredContacts = () => {
-    const findName = items.find(item => item.name === name);
-    const findNumber = items.find(item => item.number === number);
-
-    if (findName) {
-      alert(`${name} is already in contacts`);
-    } else if (findNumber) {
-      alert(`${number} is already in contacts`);
-    }
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    filteredContacts();
-    dispatch(addContact({ name, number }));
-    setName('');
-    setNumber('');
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Label>
-        Name
+    <Formik
+      initialValues={{
+        name: '',
+        number: '',
+      }}
+      validationSchema={SignupSchema}
+    >
+      <Form onSubmit={handleSubmit}>
+        <Label htmlFor="name">Name</Label>
         <Input
+          id="name"
           type="text"
           name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          pattern={NAME_MATCH}
+          placeholder="Name"
           required
-          onChange={handleInputChange}
-          value={name}
-          id={nameInputId}
         />
-      </Label>
-
-      <Label>
-        Number
+        <FormError name="name" />
+        <Label htmlFor="number">Number</Label>
         <Input
+          id="number"
           type="tel"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          placeholder="Number"
           required
-          onChange={handleInputChange}
-          value={number}
-          id={numberInputId}
         />
-      </Label>
-
-      <Button type="submit">Add contact</Button>
-    </Form>
+        <FormError name="number" />
+        <AddButton type="submit">
+          {isPosting ? (
+            <Loader />
+          ) : (
+            <>
+              <AddContactIcon />
+              <p>Add Contact</p>
+            </>
+          )}
+        </AddButton>
+      </Form>
+    </Formik>
   );
 };
 

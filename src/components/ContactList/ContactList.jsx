@@ -1,46 +1,42 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts, deleteContact } from '../../redux/operations';
-import { getFilter, getItems } from '../../redux/selectors';
-import { List, Item, Contact, Button } from './ContactList.styled';
+import { useSelector } from 'react-redux';
+import { List, ListItem } from './ContactList.styled';
+import ContactListItem from 'components/ContactListItem/ContactListItem';
+import { useGetContactsQuery } from 'redux/contactsSlice';
+import { getFilterValue } from 'redux/filterSlice';
 
 const ContactList = () => {
-  const filter = useSelector(getFilter);
-  const items = useSelector(getItems);
-  const dispatch = useDispatch();
+  const { data: contacts } = useGetContactsQuery();
+  const filter = useSelector(getFilterValue);
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
-  const contactFilter = () => {
-    const normalizeFilter = filter.toLowerCase();
-    return items.filter(item =>
-      item.name.toLowerCase().includes(normalizeFilter)
-    );
+  const createFilter = () => {
+    const normalizedFilterValue = filter.toLocaleLowerCase();
+    if (contacts) {
+      const filteredContacts = contacts.filter(
+        contact =>
+          contact.name.toLocaleLowerCase().includes(normalizedFilterValue) ||
+          contact.number.toString().includes(normalizedFilterValue)
+      );
+      return filteredContacts;
+    }
   };
 
-  const filteredContacts = contactFilter();
+  const filteredContacts = createFilter();
 
-  return (
-    <List>
-      {filteredContacts.map(({ id, name, number }) => (
-        <Item key={id}>
-          <Contact>
-            {name}: {number}
-          </Contact>
-          <Button
-            type="button"
-            onClick={() => {
-              dispatch(deleteContact(id));
-            }}
-          >
-            Delete
-          </Button>
-        </Item>
-      ))}
-    </List>
-  );
+  if (filteredContacts) {
+    return (
+      <List>
+        {filteredContacts
+          .sort((firstName, secondName) =>
+            firstName.name.localeCompare(secondName.name)
+          )
+          .map(({ id, name, number }) => (
+            <ListItem key={id} name={name}>
+              <ContactListItem name={name} number={number} id={id} />
+            </ListItem>
+          ))}
+      </List>
+    );
+  }
 };
 
 export default ContactList;
