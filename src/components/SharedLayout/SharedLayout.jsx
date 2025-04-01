@@ -23,7 +23,7 @@ const SharedLayout = ({ user }) => {
     <>
       <Box
         px="4"
-        bg="blue"
+        bg="#c5a9f3"
         boxShadow="main"
         as="header"
         position="fixed"
