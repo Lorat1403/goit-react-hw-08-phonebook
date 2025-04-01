@@ -56,7 +56,8 @@ export default function Register() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage:
+              'url(https://www.clickasnap.com/image/5651437/sea-sunset)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: '#fcfc81',
             backgroundSize: 'cover',

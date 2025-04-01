@@ -6,7 +6,7 @@ export const Container = styled.div`
 `;
 
 export const HomeTitle = styled.h1`
-  padding-top: ${p => p.theme.space[4]}px;
+  padding-top: ${p => p.theme.space[6]}px;
   width: 100%;
   font-size: ${p => p.theme.fontSizes.l};
   margin-left: ${p => p.theme.space[9]};

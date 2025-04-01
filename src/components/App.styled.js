@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 
 export const Section = styled.div`
-  width: 800px;
+  width: 70vw;
   margin-left: auto;
   margin-right: auto;
   border-radius: 5%;
@@ -14,6 +14,9 @@ export const Section = styled.div`
   min-height: 100vh;
   text-align: center;
   background-color: lightblue;
+  ${
+    '' /* background-image: 'url(https://www.clickasnap.com/image/5651437/sea-sunset)'; */
+  }
 `;
 
 export const Title = styled.h1`
