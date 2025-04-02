@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunksimple_redux_app=self.webpackChunksimple_redux_app||[]).push([[356],{8356:(e,r,s)=>{s.r(r),s.d(r,{default:()=>n});var a=s(4974),l=s(5475),d=s(579);const n=()=>(0,d.jsxs)(a.a,{as:"div",p:"4",display:"flex",children:[(0,d.jsx)(l.N_,{to:"/",children:"Go home"}),(0,d.jsx)(a.a,{as:"b",textAlign:"center",mx:"auto",mt:"5",fontSize:"l",color:"orangered",children:"Error. Page couldn't be found."})]})}}]);
+//# sourceMappingURL=356.6d594ae1.chunk.js.map
