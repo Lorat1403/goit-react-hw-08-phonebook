@@ -2,7 +2,7 @@
   "name": "simple-redux-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://lorat1403.github.io/simple-redux-app",
+  "homepage": "https://lorat1403.github.io/goit-react-hw-08-phonebook/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
